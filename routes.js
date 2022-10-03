@@ -2,32 +2,37 @@ var express = require("express");
 var router = express.Router();
 var SinhVien = require("./Models/SinhVien");
 
-const payloadSuccess = (data) => {
-  return {
-    data: data,
-    status: "OK",
-  };
-};
-
-const payloadError = (data) => {
-  return { data: data, status: "ERR" };
-};
-
 router.get("/:id?", function (req, res, next) {
   if (req.params.id) {
     SinhVien.getSinhVienById(req.params.id, function (err, rows) {
       if (err) {
-        res.json(err);
+        res.jsonp({
+          payload: err,
+          status: res.statusCode,
+          message: "Error",
+        });
       } else {
-        res.json(rows);
+        res.jsonp({
+          payload: rows,
+          status: res.statusCode,
+          message: "OK",
+        });
       }
     });
   } else {
     SinhVien.getAllSinhVien(function (err, rows) {
       if (err) {
-        res.json(err);
+        res.jsonp({
+          payload: err,
+          status: res.statusCode,
+          message: "Error",
+        });
       } else {
-        res.json(rows);
+        res.jsonp({
+          payload: rows,
+          status: res.statusCode,
+          message: "OK",
+        });
       }
     });
   }
@@ -36,7 +41,11 @@ router.get("/:id?", function (req, res, next) {
 router.post("/", function (req, res, next) {
   SinhVien.addSV(req.body, function (err, count) {
     if (err) {
-      res.json(err);
+      res.jsonp({
+        payload: err,
+        status: res.statusCode,
+        message: "Error",
+      });
     } else {
       res.json(req.body);
     }
@@ -46,9 +55,16 @@ router.post("/", function (req, res, next) {
 router.delete("/:id", function (req, res, next) {
   SinhVien.deleteSV(req.params.id, function (err, count) {
     if (err) {
-      res.json(err);
+      res.jsonp({
+        payload: err,
+        status: res.statusCode,
+        message: "Error",
+      });
     } else {
-      res.json(count);
+      res.jsonp({
+        status: res.statusCode,
+        message: "Successfully",
+      });
     }
   });
 });
@@ -56,9 +72,17 @@ router.delete("/:id", function (req, res, next) {
 router.put("/:id", function (req, res, next) {
   SinhVien.updateSV(req.params.id, req.body, function (err, rows) {
     if (err) {
-      res.json(err);
+      res.jsonp({
+        payload: err,
+        status: res.statusCode,
+        message: "Error",
+      });
     } else {
-      res.json(rows);
+      res.jsonp({
+        payload: rows,
+        status: res.statusCode,
+        message: "OK",
+      });
     }
   });
 });
